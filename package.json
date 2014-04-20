@@ -1,0 +1,21 @@
+{
+  "name": "lab-rat",
+  "version": "0.1.0",
+  "author": "Matt Chadburn <matt.chadburn@ft.com>",
+  "description": "Simple split testing",
+  "contributors": [
+    "Matt Chadburn"
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "devDependencies": {
+    "browserify": "*",
+    "karma": "0.12.9",
+    "karma-jasmine": "~0.2.0",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-chrome-launcher": "*",
+    "phantomjs": "*"
+  },
+  "license": "MIT"
+}
