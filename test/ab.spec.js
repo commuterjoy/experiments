@@ -19,10 +19,6 @@ describe('AB Testing', function() {
 
 	describe("User segmentation", function () {
 		
-		it('should assign a user in a percentile bucket', function() {
-			expect(new Ab()).toBeDefined();
-		});
-		
 		it('should assign the user to a persistant audience segment', function() {
 			var a = new Ab();
 			expect(a.getId()).toEqual(852);
