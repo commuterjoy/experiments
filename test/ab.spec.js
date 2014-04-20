@@ -2,6 +2,13 @@
 var Ab = require('../src/ab.js'); 
 
 describe('AB Testing', function() {
+	
+	var test = {
+		id: 'foo',
+		audience: 0.1, // 10% of people  
+		audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
+		variants: [{ id: 'A' },{ id: 'B' }]
+	};
 
 	beforeEach(function() {
 		spyOn(Math, 'random').and.returnValue(0.85123);
@@ -31,18 +38,16 @@ describe('AB Testing', function() {
 		});
 		
 		it('should allocate the user to a test variant', function() {
-			var test = {
-				id: 'foo',
-				audience: 0.1, // 10% of people  
-				audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
-				variants: [{ id: 'A' },{ id: 'B' }]
-			};
 			var a = new Ab(test);
 			expect(a.segment()).toEqual('A');
 			expect(localStorage.getItem('ab__stash')).toEqual('{"foo":{"variant":"A"}}')
 		});
 
 		it('should put all non-participating users in a "not in test" group', function() {
+			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
+			var a = new Ab(t)
+			a.segment();
+			expect(localStorage.getItem('ab__stash')).toEqual('{"foo":{"variant":"not-in-test"}}')
 		});
 
 		it("should not segment user if test can't be run", function() {

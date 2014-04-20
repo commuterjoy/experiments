@@ -40,9 +40,9 @@ Ab.prototype.segment = function () {
 		var variant = allocateVariant(this.getId(), this.profile);
 		this.addParticipation(this.profile.id, variant);
 		return variant;
+	} else {
+		this.addParticipation(this.profile.id, 'not-in-test');
 	}
-
-	return 'B';
 }; 
 
 /****/
