@@ -16,25 +16,34 @@ Ab.prototype.db = 'ab__stash'; // { 'test-id': '<variant>' }
 Ab.prototype.profile = {};
 
 Ab.prototype.getParticipations = function () {
-	return JSON.parse(localStorage.getItem(this.db)) || {};
+	var db = localStorage.getItem(this.db);
+	return (db) ? JSON.parse(db) : {};
 }
 
 Ab.prototype.addParticipation = function(test, variantId) {
-	var participations = this.getParticipations();
-	participations[test] = {
-		variant: variantId
-	};
-	localStorage.setItem(this.db, JSON.stringify(participations));
+	//var participations = this.getParticipations();
+	//participations[test] = {
+	//	variant: variantId
+	//};
+	localStorage.setItem(this.db, JSON.stringify({
+		"id": test,
+		"variant": variantId
+	}));
 }
 
 Ab.prototype.segment = function () {
     
-	var smallestTestId = this.max * this.profile.audienceOffset;
-	var largestTestId  = smallestTestId + this.max * this.profile.audience;
+	var smallestTestId = this.max * this.profile.audienceOffset,
+		largestTestId  = smallestTestId + this.max * this.profile.audience;
 
 	var allocateVariant = function (id, profile) {
 		return profile.variants[id % profile.variants.length].id;
-	} 
+	}
+	
+	// check if not a memeber of this experiment
+	if (this.getParticipations().id === this.profile.id) {
+		return false;
+	}
 
 	if (smallestTestId <= this.getId() && largestTestId > this.getId()) {
 		var variant = allocateVariant(this.getId(), this.profile);

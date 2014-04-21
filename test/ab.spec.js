@@ -40,67 +40,72 @@ describe('AB Testing', function() {
 		it('should allocate the user to a test variant', function() {
 			var a = new Ab(test);
 			expect(a.segment()).toEqual('A');
-			expect(localStorage.getItem('ab__stash')).toEqual('{"foo":{"variant":"A"}}')
+			expect(localStorage.getItem('ab__stash')).toEqual('{"id":"foo","variant":"A"}')
 		});
 
 		it('should put all non-participating users in a "not in test" group', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
 			var a = new Ab(t)
 			a.segment();
-			expect(localStorage.getItem('ab__stash')).toEqual('{"foo":{"variant":"not-in-test"}}')
+			expect(localStorage.getItem('ab__stash')).toEqual('{"id":"foo","variant":"not-in-test"}')
 		});
-
-		it("should not segment user if test can't be run", function() {
-		});
-
-		it("should not segment user if the test has expired", function() {
-		});
-
-		it("should not segment user if the test is switched off", function() {
-		});
-
+		
 		it("should not segment user if they already belong to the test", function() {
+			var t = '{"id":"foo","variant":"B"}';
+			localStorage.setItem('ab__stash', t);	
+			var a = new Ab(test);
+			a.segment();
+			expect(localStorage.getItem('ab__stash')).toEqual(t)
 		});
 
-		it('should retrieve all the tests user is in', function() {
+		xit("should not segment user if test can't be run", function() {
 		});
 
-		it('should remove expired tests from being logged', function () {
+		xit("should not segment user if the test has expired", function() {
 		});
 
-		it('should remove participation from tests that have been removed/renamed', function () {
+		xit("should not segment user if the test is switched off", function() {
+		});
+
+		xit('should retrieve all the tests user is in', function() {
+		});
+
+		xit('should remove expired tests from being logged', function () {
+		});
+
+		xit('should remove participation from tests that have been removed/renamed', function () {
 		})
 
-		it('should allow the forcing of users in to a given test and variant', function () {
+		xit('should allow the forcing of users in to a given test and variant', function () {
 		});
 
 	});
 
 	describe("Running tests", function () {
 
-		it('should be able to start test', function() {
+		xit('should be able to start test', function() {
 		});
 
-		it('should not to run the after the expiry date', function () {
+		xit('should not to run the after the expiry date', function () {
 		});
 
-		it('The current DOM context should be passed to the test variant functions', function() {
+		xit('The current DOM context should be passed to the test variant functions', function() {
 		});
 
 	});
 
 	describe("Analytics", function () {
 
-		it('should tell me if an event is applicable to a test that I belong to', function () {
+		xit('should tell me if an event is applicable to a test that I belong to', function () {
 		});
 
-		it('should tell me if an event is applicable to a test with multiple event strings that I belong to', function () {
+		xit('should tell me if an event is applicable to a test with multiple event strings that I belong to', function () {
 		});
 
-		it('should return a list of test names that are relevant to the event', function () {
+		xit('should return a list of test names that are relevant to the event', function () {
 		});
 
-		it('should return the variant of a test that current user is participating in', function () {
+		xit('should return the variant of a test that current user is participating in', function () {
 		});
 
 	});
