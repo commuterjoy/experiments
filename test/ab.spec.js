@@ -20,42 +20,43 @@ describe('AB Testing', function() {
 
 	describe("Ab", function () {
 		it('should exist', function() {
-			expect(new Ab()).toBeDefined();
+			expect(new Ab(test)).toBeDefined();
 		});
 	});
 
 	describe("User segmentation", function () {
 		
 		it('should assign the user to a persistant audience segment', function() {
-			var a = new Ab();
+			var a = new Ab(test);
 			expect(a.getId()).toEqual(852);
 		});
 		
 		it('should not reassign the user to audience segment if one already exists', function() {
 			localStorage.setItem('ab__uid', '101');	
-			var a = new Ab();
+			var a = new Ab(test);
 			expect(a.getId()).toEqual(101);
 		});
 		
 		it('should allocate the user to a test variant', function() {
 			var a = new Ab(test);
 			expect(a.segment()).toEqual('A');
-			expect(localStorage.getItem('ab__stash')).toEqual('{"id":"foo","variant":"A"}')
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}')
 		});
 
 		it('should put all non-participating users in a "not in test" group', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
 			var a = new Ab(t)
 			a.segment();
-			expect(localStorage.getItem('ab__stash')).toEqual('{"id":"foo","variant":"not-in-test"}')
+			debugger;
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"not-in-test"}')
 		});
-		
+	
 		it("should not segment user if they already belong to the test", function() {
 			var t = '{"id":"foo","variant":"B"}';
-			localStorage.setItem('ab__stash', t);	
+			localStorage.setItem('ab__foo', t);	
 			var a = new Ab(test);
 			a.segment();
-			expect(localStorage.getItem('ab__stash')).toEqual(t)
+			expect(localStorage.getItem('ab__foo')).toEqual(t);
 		});
 
 		xit("should not segment user if test can't be run", function() {

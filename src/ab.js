@@ -3,6 +3,7 @@
 var Ab = function (profile) {
 	this.profile = profile;
 	this.allocateId();	
+	this.storagePrefix += profile.id.toLowerCase();
 };
 
 Ab.prototype.min = 0;
@@ -11,21 +12,17 @@ Ab.prototype.max = 1000;
 
 Ab.prototype.uidKey = 'ab__uid';
 
-Ab.prototype.db = 'ab__stash'; // { 'test-id': '<variant>' } 
+Ab.prototype.storagePrefix = 'ab__';
 
 Ab.prototype.profile = {};
 
-Ab.prototype.getParticipations = function () {
-	var db = localStorage.getItem(this.db);
+Ab.prototype.getParticipation = function () {
+	var db = localStorage.getItem(this.storagePrefix);
 	return (db) ? JSON.parse(db) : {};
 }
 
 Ab.prototype.addParticipation = function(test, variantId) {
-	//var participations = this.getParticipations();
-	//participations[test] = {
-	//	variant: variantId
-	//};
-	localStorage.setItem(this.db, JSON.stringify({
+	localStorage.setItem(this.storagePrefix, JSON.stringify({
 		"id": test,
 		"variant": variantId
 	}));
@@ -40,8 +37,8 @@ Ab.prototype.segment = function () {
 		return profile.variants[id % profile.variants.length].id;
 	}
 	
-	// check if not a memeber of this experiment
-	if (this.getParticipations().id === this.profile.id) {
+	// check if not a member of this experiment
+	if (this.getParticipation().id === this.profile.id) {
 		return false;
 	}
 
@@ -53,8 +50,6 @@ Ab.prototype.segment = function () {
 		this.addParticipation(this.profile.id, 'not-in-test');
 	}
 }; 
-
-/****/
 
 Ab.prototype.hasId = function () {
 	return !!localStorage.getItem(this.uidKey)
