@@ -8,7 +8,17 @@ describe('AB Testing', function() {
 		audience: 0.1, // 10% of people  
 		audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
 		expiry: new Date(2050, 1, 1),
-		variants: [{ id: 'A' },{ id: 'B' }],
+		variants: [{
+			id: 'A',
+			test: function () {
+				return true;
+			}
+		},{ 
+			id: 'B',
+			test: function () {
+				return true;
+			}
+		}],
 		canRun: function () {
 			return true;
 		}
@@ -109,29 +119,24 @@ describe('AB Testing', function() {
 
 	describe("Running tests", function () {
 
-		xit('should be able to start test', function() {
-		});
-
-		xit('should not to run the after the expiry date', function () {
-		});
-
-		xit('The current DOM context should be passed to the test variant functions', function() {
+		it('should be able to start test', function() {
+			var variant = test.variants[0]
+			spyOn(variant, 'test');
+			var a = new Ab(test);
+			a.segment();
+			a.run();
+			expect(variant.test.calls.count()).toBe(1);
+			
 		});
 
 	});
 
 	describe("Analytics", function () {
 
-		xit('should tell me if an event is applicable to a test that I belong to', function () {
-		});
-
-		xit('should tell me if an event is applicable to a test with multiple event strings that I belong to', function () {
-		});
-
-		xit('should return a list of test names that are relevant to the event', function () {
-		});
-
-		xit('should return the variant of a test that current user is participating in', function () {
+		it('should return the variant of a test that current user is participating in', function () {
+			var ab = new Ab(test);
+			ab.segment();
+			expect(ab.getParticipation().variant).toBe('A');
 		});
 
 	});

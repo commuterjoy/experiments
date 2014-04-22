@@ -67,7 +67,7 @@ Ab.prototype.segment = function () {
 		return profile.variants[id % profile.variants.length].id;
 	}
 	
-	// check if not a member of this experiment
+	// check if not already a member of this experiment
 	if (this.getParticipation().id === this.profile.id) {
 		return false;
 	}
@@ -118,6 +118,15 @@ Ab.prototype.allocateId = function () {
 			return this.setId(generateRandomInteger(this.min, this.max));
 	}
 };
+
+Ab.prototype.run = function () {
+	var belongsTo = this.getParticipation().variant;
+	this.profile.variants.forEach(function (v) {
+		if (v.id === belongsTo) {
+			v.test.call(self);
+		};
+	});
+}
 
 // a conversion
 Ab.prototype.complete = function () {
