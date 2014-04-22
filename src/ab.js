@@ -1,9 +1,17 @@
 
 /* */
-var Ab = function (profile) {
+var Ab = function (profile, opts) {
+	
+	
+	this.opts = opts || {};
 	this.profile = profile;
-	this.allocateId();	
+	this.allocateId();
 	this.storagePrefix += profile.id.toLowerCase();
+
+	// if a variant is supplied then force the user in to that test
+	if (!!this.opts.variant) { 
+		this.addParticipation(this.profile.id, this.opts.variant);
+	}
 };
 
 Ab.prototype.min = 0;

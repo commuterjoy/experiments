@@ -73,6 +73,14 @@ describe('AB Testing', function() {
 			a.complete();
 			expect(a.isComplete).toBeTruthy();
 		});
+		
+		it('should allow the forcing of users in to a given test and variant', function () {
+			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
+			var a = new Ab(t, { variant: 'B' })
+			a.segment();
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}')
+		});
+
 
 
 		xit("should not segment user if the test has expired", function() {
@@ -86,9 +94,6 @@ describe('AB Testing', function() {
 
 		xit('should remove participation from tests that have been removed/renamed', function () {
 		})
-
-		xit('should allow the forcing of users in to a given test and variant', function () {
-		});
 
 	});
 
