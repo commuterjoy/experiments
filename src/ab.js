@@ -1,6 +1,8 @@
+/*global module*/
 
-/* */
 var Ab = function (profile, opts) {
+
+	"use strict";
 	
 	this.opts = opts || {};
 	this.profile = profile;
@@ -34,30 +36,36 @@ Ab.prototype.isComplete = false;
 Ab.prototype.idValidator = /^[a-z0-9-]{1,10}$/; 
 
 Ab.prototype.getParticipation = function () {
+	"use strict";
 	var db = localStorage.getItem(this.storagePrefix);
 	return (db) ? JSON.parse(db) : {};
-}
+};
 
 Ab.prototype.removeParticipation = function () {
+	"use strict";
 	return localStorage.removeItem(this.storagePrefix);
-}
+};
 
 Ab.prototype.addParticipation = function(test, variantId) {
+	"use strict";
 	localStorage.setItem(this.storagePrefix, JSON.stringify({
 		"id": test,
 		"variant": variantId
 	}));
-}
+};
 
 Ab.prototype.hasExpired = function () {
+	"use strict";
 	return (new Date() > this.profile.expiry);
-}
+};
 
 Ab.prototype.clean = function () {
+	"use strict";
 	this.removeParticipation();
-}
+};
 
 Ab.prototype.segment = function () {
+	"use strict";
     
 	var smallestTestId = this.max * this.profile.audienceOffset,
 		largestTestId  = smallestTestId + this.max * this.profile.audience;
@@ -65,7 +73,7 @@ Ab.prototype.segment = function () {
 	// deterministically allocate the user in to a test variant
 	var allocateVariant = function (id, profile) {
 		return profile.variants[id % profile.variants.length].id;
-	}
+	};
 	
 	// check if not already a member of this experiment
 	if (this.getParticipation().id === this.profile.id) {
@@ -92,24 +100,28 @@ Ab.prototype.segment = function () {
 }; 
 
 Ab.prototype.hasId = function () {
-	return !!localStorage.getItem(this.uidKey)
-}
+	"use strict";
+	return !!localStorage.getItem(this.uidKey);
+};
 
 Ab.prototype.getId = function () {
+	"use strict";
 	return parseInt(localStorage.getItem(this.uidKey));
-}
+};
 
 Ab.prototype.setId = function (n) {
+	"use strict";
 	localStorage.setItem(this.uidKey, n);
 	return n;
-}
+};
 
 Ab.prototype.allocateId = function () {
+	"use strict";
 	
 	// TODO for signed in people we should create a key off their user ids, I.e. deterministic 
 	var generateRandomInteger = function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1) + min); 
-	}
+	};
 
 	switch (this.hasId()) {
 		case true:
@@ -120,17 +132,19 @@ Ab.prototype.allocateId = function () {
 };
 
 Ab.prototype.run = function () {
+	"use strict";
 	var belongsTo = this.getParticipation().variant;
 	this.profile.variants.forEach(function (v) {
 		if (v.id === belongsTo) {
-			v.test.call(self);
-		};
+			v.test.call();
+		}
 	});
-}
+};
 
 // a conversion
 Ab.prototype.complete = function () {
+	"use strict";
 	this.isComplete = true;
-}
+};
 
 module.exports = Ab;
