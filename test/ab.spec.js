@@ -96,15 +96,14 @@ describe('AB Testing', function() {
 			a.segment();
 			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
-
-		xit('should retrieve all the tests user is in', function() {
+		
+		it('should remove participation from a test', function () {
+			var a = new Ab(test);
+			a.segment();
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}')
+			a.clean();
+			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
-
-		xit('should remove expired tests from being logged', function () {
-		});
-
-		xit('should remove participation from tests that have been removed/renamed', function () {
-		})
 
 	});
 

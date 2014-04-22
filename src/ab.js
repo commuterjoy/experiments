@@ -38,6 +38,10 @@ Ab.prototype.getParticipation = function () {
 	return (db) ? JSON.parse(db) : {};
 }
 
+Ab.prototype.removeParticipation = function () {
+	return localStorage.removeItem(this.storagePrefix);
+}
+
 Ab.prototype.addParticipation = function(test, variantId) {
 	localStorage.setItem(this.storagePrefix, JSON.stringify({
 		"id": test,
@@ -47,6 +51,10 @@ Ab.prototype.addParticipation = function(test, variantId) {
 
 Ab.prototype.hasExpired = function () {
 	return (new Date() > this.profile.expiry);
+}
+
+Ab.prototype.clean = function () {
+	this.removeParticipation();
 }
 
 Ab.prototype.segment = function () {
@@ -64,6 +72,7 @@ Ab.prototype.segment = function () {
 		return false;
 	}
 
+	// check the test has not passed it's expiry date
 	if (this.hasExpired()) {
 		return false;
 	}
