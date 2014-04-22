@@ -1,5 +1,5 @@
 
-var Ab = require('../src/ab.js'); 
+var Ab = require('./../main'); 
 
 describe('AB Testing', function() {
 	
