@@ -16,7 +16,8 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-chrome-launcher": "*",
     "jshint": "*",
-    "phantomjs": "*"
+    "phantomjs": "*",
+    "uglify-js": "*"
   },
   "jshintConfig": {
     "forin": true,

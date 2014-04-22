@@ -8,6 +8,8 @@ clean:
 
 build:
 	./node_modules/jshint/bin/jshint ./src ./test
+	./node_modules/browserify/bin/cmd.js -e src/ab.js -o target/ab.js -s Ab
+	./node_modules/uglify-js/bin/uglifyjs -o target/ab.min.js target/ab.js	
 
 watch:
 	watchr -e "watch('(src|test)/.*\.js') { system 'make' }"
