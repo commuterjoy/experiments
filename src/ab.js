@@ -16,6 +16,8 @@ Ab.prototype.storagePrefix = 'ab__';
 
 Ab.prototype.profile = {};
 
+Ab.prototype.isComplete = false;
+
 Ab.prototype.getParticipation = function () {
 	var db = localStorage.getItem(this.storagePrefix);
 	return (db) ? JSON.parse(db) : {};
@@ -33,12 +35,17 @@ Ab.prototype.segment = function () {
 	var smallestTestId = this.max * this.profile.audienceOffset,
 		largestTestId  = smallestTestId + this.max * this.profile.audience;
 
+	// deterministically allocate the user in to a test variant
 	var allocateVariant = function (id, profile) {
 		return profile.variants[id % profile.variants.length].id;
 	}
 	
 	// check if not a member of this experiment
 	if (this.getParticipation().id === this.profile.id) {
+		return false;
+	}
+
+	if (!this.profile.canRun.call(this)) {
 		return false;
 	}
 
@@ -66,7 +73,7 @@ Ab.prototype.setId = function (n) {
 
 Ab.prototype.allocateId = function () {
 	
-	// TODO for signed in people we should create a key off their user ids. 
+	// TODO for signed in people we should create a key off their user ids, I.e. deterministic 
 	var generateRandomInteger = function(min, max) {
 		return Math.floor(Math.random() * (max - min + 1) + min); 
 	}
@@ -78,5 +85,10 @@ Ab.prototype.allocateId = function () {
 			return this.setId(generateRandomInteger(this.min, this.max));
 	}
 };
+
+// a conversion
+Ab.prototype.complete = function () {
+	this.isComplete = true;
+}
 
 module.exports = Ab;

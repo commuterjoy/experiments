@@ -7,7 +7,10 @@ describe('AB Testing', function() {
 		id: 'foo',
 		audience: 0.1, // 10% of people  
 		audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
-		variants: [{ id: 'A' },{ id: 'B' }]
+		variants: [{ id: 'A' },{ id: 'B' }],
+		canRun: function () {
+			return true;
+		}
 	};
 
 	beforeEach(function() {
@@ -47,7 +50,6 @@ describe('AB Testing', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
 			var a = new Ab(t)
 			a.segment();
-			debugger;
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"not-in-test"}')
 		});
 	
@@ -59,13 +61,24 @@ describe('AB Testing', function() {
 			expect(localStorage.getItem('ab__foo')).toEqual(t);
 		});
 
-		xit("should not segment user if test can't be run", function() {
+		it("should not segment user if test can't be run", function() {
+			var t = Object.create(test, { canRun: { value: function () {
+					return false;
+				}
+			}}); 
+			var a = new Ab(t)
+			a.segment();
+			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
+		
+		it("Mark the test as complete", function() {
+			var a = new Ab(test)
+			a.complete();
+			expect(a.isComplete).toBeTruthy();
+		});
+
 
 		xit("should not segment user if the test has expired", function() {
-		});
-
-		xit("should not segment user if the test is switched off", function() {
 		});
 
 		xit('should retrieve all the tests user is in', function() {
