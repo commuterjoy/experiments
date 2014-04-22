@@ -7,4 +7,4 @@ clean:
 	rm -Rf ./target
 
 watch:
-	watchr -e "watch('src/.*\.js') { system 'make' }"
+	watchr -e "watch('(src|test)/.*\.js') { system 'make' }"
