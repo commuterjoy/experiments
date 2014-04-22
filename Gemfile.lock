@@ -1,0 +1,9 @@
+GEM
+  specs:
+    watchr (0.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  watchr
