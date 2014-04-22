@@ -19,8 +19,16 @@ describe('AB Testing', function() {
 	});
 
 	describe("Ab", function () {
+		
 		it('should exist', function() {
 			expect(new Ab(test)).toBeDefined();
+		});
+		
+		it('complain about invalid test names', function() {
+			// expect(c.add.bind(c, { bar: 1 })).toThrow();
+			expect(function () { 
+				new Ab({ id: 'gA___' })
+			}).toThrow();
 		});
 	});
 

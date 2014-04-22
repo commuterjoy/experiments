@@ -2,12 +2,15 @@
 /* */
 var Ab = function (profile, opts) {
 	
-	
 	this.opts = opts || {};
 	this.profile = profile;
+	this.storagePrefix += profile.id;
 	this.allocateId();
-	this.storagePrefix += profile.id.toLowerCase();
 
+	if (!this.idValidator.test(this.profile.id)) {
+		throw new Error('Invalid test profile id');
+	}
+	
 	// if a variant is supplied then force the user in to that test
 	if (!!this.opts.variant) { 
 		this.addParticipation(this.profile.id, this.opts.variant);
@@ -25,6 +28,8 @@ Ab.prototype.storagePrefix = 'ab__';
 Ab.prototype.profile = {};
 
 Ab.prototype.isComplete = false;
+
+Ab.prototype.idValidator = /^[a-z0-9-]{1,10}$/; 
 
 Ab.prototype.getParticipation = function () {
 	var db = localStorage.getItem(this.storagePrefix);
