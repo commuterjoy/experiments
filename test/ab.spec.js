@@ -7,6 +7,7 @@ describe('AB Testing', function() {
 		id: 'foo',
 		audience: 0.1, // 10% of people  
 		audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
+		expiry: new Date(2050, 1, 1),
 		variants: [{ id: 'A' },{ id: 'B' }],
 		canRun: function () {
 			return true;
@@ -25,7 +26,6 @@ describe('AB Testing', function() {
 		});
 		
 		it('complain about invalid test names', function() {
-			// expect(c.add.bind(c, { bar: 1 })).toThrow();
 			expect(function () { 
 				new Ab({ id: 'gA___' })
 			}).toThrow();
@@ -89,9 +89,12 @@ describe('AB Testing', function() {
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}')
 		});
 
-
-
-		xit("should not segment user if the test has expired", function() {
+		it("should not segment user if the test has expired", function() {
+			var dateInThePast = new Date(2000, 1, 1); 
+			var t = Object.create(test, { expiry: { value: dateInThePast }}); 
+			var a = new Ab(t);
+			a.segment();
+			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
 
 		xit('should retrieve all the tests user is in', function() {

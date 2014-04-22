@@ -5,6 +5,8 @@ var Ab = function (profile, opts) {
 	this.opts = opts || {};
 	this.profile = profile;
 	this.storagePrefix += profile.id;
+	
+	// All users need to be allocated to a test percentile
 	this.allocateId();
 
 	if (!this.idValidator.test(this.profile.id)) {
@@ -43,6 +45,10 @@ Ab.prototype.addParticipation = function(test, variantId) {
 	}));
 }
 
+Ab.prototype.hasExpired = function () {
+	return (new Date() > this.profile.expiry);
+}
+
 Ab.prototype.segment = function () {
     
 	var smallestTestId = this.max * this.profile.audienceOffset,
@@ -58,6 +64,11 @@ Ab.prototype.segment = function () {
 		return false;
 	}
 
+	if (this.hasExpired()) {
+		return false;
+	}
+
+	// check the test can be exectuted in this context
 	if (!this.profile.canRun.call(this)) {
 		return false;
 	}
