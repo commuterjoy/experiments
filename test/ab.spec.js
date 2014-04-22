@@ -18,9 +18,6 @@ describe('AB Testing', function() {
 		localStorage.clear();
 	});
 
-	afterEach(function() {
-	});
-
 	describe("Ab", function () {
 		it('should exist', function() {
 			expect(new Ab(test)).toBeDefined();
@@ -29,7 +26,7 @@ describe('AB Testing', function() {
 
 	describe("User segmentation", function () {
 		
-		it('should assign the user to a persistant audience segment', function() {
+		it('should assign new users to an audience segment', function() {
 			var a = new Ab(test);
 			expect(a.getId()).toEqual(852);
 		});
