@@ -49,7 +49,7 @@ describe('AB Testing', function() {
 		
 		it('should assign new users to an audience segment', function() {
 			var a = new Ab(test);
-			expect(a.getId()).toEqual(852);
+			expect(a.getId()).toEqual(851230);
 		});
 		
 		it('should not reassign the user to audience segment if one already exists', function() {

@@ -23,7 +23,7 @@ var Ab = function (profile, opts) {
 
 Ab.prototype.min = 0;
 
-Ab.prototype.max = 1000;
+Ab.prototype.max = 1000000;
 
 Ab.prototype.uidKey = 'ab__uid';
 
