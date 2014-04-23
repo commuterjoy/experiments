@@ -11,7 +11,7 @@ A JavaScript AB testing framework, ported from [http://www.github.com/guardian/f
 - Agnostic of where the data is logged - most companies have their own customer data repoisitories.
 
  
-### Experiment proifles 
+### Experiment profiles 
 
 Each AB test is represented by a JavaScript object describing the profile of the test to be undertaken. 
 
