@@ -6,6 +6,7 @@ describe('AB Testing', function() {
 
 	"use strict";
 
+	// mock test
 	var test = {
 		id: 'foo',
 		audience: 0.1, // 10% of people  
@@ -59,23 +60,20 @@ describe('AB Testing', function() {
 		});
 		
 		it('should allocate the user to a test variant', function() {
-			var a = new Ab(test);
-			expect(a.segment()).toEqual('A');
+			new Ab(test).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}');
 		});
 
 		it('should put all non-participating users in a "not in test" group', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
-			var a = new Ab(t);
-			a.segment();
+			new Ab(t).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"not-in-test"}');
 		});
 	
 		it("should not segment user if they already belong to the test", function() {
 			var t = '{"id":"foo","variant":"B"}';
 			localStorage.setItem('ab__foo', t);	
-			var a = new Ab(test);
-			a.segment();
+			new Ab(test).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual(t);
 		});
 
@@ -84,35 +82,30 @@ describe('AB Testing', function() {
 					return false;
 				}
 			}}); 
-			var a = new Ab(t);
-			a.segment();
+			new Ab(t).segment();
 			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
 		
 		it("Mark the test as complete", function() {
-			var a = new Ab(test);
-			a.complete();
+			var a = new Ab(test).complete();
 			expect(a.isComplete).toBeTruthy();
 		});
 		
 		it('should allow the forcing of users in to a given test and variant', function () {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
-			var a = new Ab(t, { variant: 'B' });
-			a.segment();
+			new Ab(t, { variant: 'B' }).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}');
 		});
 
 		it("should not segment user if the test has expired", function() {
 			var dateInThePast = new Date(2000, 1, 1); 
 			var t = Object.create(test, { expiry: { value: dateInThePast }}); 
-			var a = new Ab(t);
-			a.segment();
+			new Ab(t).segment();
 			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
 		
 		it('should remove participation from a test', function () {
-			var a = new Ab(test);
-			a.segment();
+			var a = new Ab(test).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}');
 			a.clean();
 			expect(localStorage.getItem('ab__foo')).toBeNull();
@@ -125,9 +118,7 @@ describe('AB Testing', function() {
 		it('should be able to start test', function() {
 			var variant = test.variants[0];
 			spyOn(variant, 'test');
-			var a = new Ab(test);
-			a.segment();
-			a.run();
+			new Ab(test).segment().run();
 			expect(variant.test.calls.count()).toBe(1);
 		});
 
@@ -136,8 +127,7 @@ describe('AB Testing', function() {
 	describe("Analytics", function () {
 
 		it('should return the variant of a test that current user is participating in', function () {
-			var ab = new Ab(test);
-			ab.segment();
+			var ab = new Ab(test).segment();
 			expect(ab.getParticipation().variant).toBe('A');
 		});
 

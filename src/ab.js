@@ -1,5 +1,8 @@
 /*global module*/
 
+/**
+ * Represents a single Ab test
+ */
 var Ab = function (profile, opts) {
 
 	"use strict";
@@ -19,6 +22,8 @@ var Ab = function (profile, opts) {
 	if (!!this.opts.variant) { 
 		this.addParticipation(this.profile.id, this.opts.variant);
 	}
+
+	return this;
 };
 
 Ab.prototype.min = 0;
@@ -62,6 +67,7 @@ Ab.prototype.hasExpired = function () {
 Ab.prototype.clean = function () {
 	"use strict";
 	this.removeParticipation();
+	return this;
 };
 
 Ab.prototype.segment = function () {
@@ -77,26 +83,27 @@ Ab.prototype.segment = function () {
 	
 	// check if not already a member of this experiment
 	if (this.getParticipation().id === this.profile.id) {
-		return false;
+		return this;
 	}
 
 	// check the test has not passed it's expiry date
 	if (this.hasExpired()) {
-		return false;
+		return this;
 	}
 
 	// check the test can be exectuted in this context
 	if (!this.profile.canRun.call(this)) {
-		return false;
+		return this;
 	}
 
 	if (smallestTestId <= this.getId() && largestTestId > this.getId()) {
 		var variant = allocateVariant(this.getId(), this.profile);
 		this.addParticipation(this.profile.id, variant);
-		return variant;
 	} else {
 		this.addParticipation(this.profile.id, 'not-in-test');
 	}
+	
+	return this;
 }; 
 
 Ab.prototype.hasId = function () {
@@ -139,12 +146,14 @@ Ab.prototype.run = function () {
 			v.test.call();
 		}
 	});
+	return this;
 };
 
 // a conversion
 Ab.prototype.complete = function () {
 	"use strict";
 	this.isComplete = true;
+	return this;
 };
 
 module.exports = Ab;
