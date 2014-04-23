@@ -1,7 +1,7 @@
 karma:
 	mkdir -p ./target
 	./node_modules/.bin/browserify test/ab.spec.js -o target/ab.spec.js
-	./node_modules/karma/bin/karma start karma.config --log-level debug --debug
+	./node_modules/karma/bin/karma start karma.conf.js --log-level debug --debug
 
 clean:
 	rm -Rf ./target
