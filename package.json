@@ -1,14 +1,23 @@
 {
-  "name": "lab-rat",
+  "name": "experiments",
   "version": "0.1.0",
   "author": "Matt Chadburn <matt.chadburn@ft.com>",
   "description": "Simple split testing",
   "contributors": [
-    "Matt Chadburn"
+    "Matt Chadburn",
+    "Guardian News & Media Ltd"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:commuterjoy/experiments.git"
+  },
   "engines": {
     "node": "*"
   },
+  "keywords": [
+    "ab testing",
+    "split testing"
+  ],
   "devDependencies": {
     "browserify": "*",
     "karma": "0.12.9",
@@ -35,5 +44,5 @@
     "trailing": true,
     "smarttabs": true
   },
-  "license": "MIT"
+  "license": "Apache-2.0"
 }
