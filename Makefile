@@ -7,10 +7,9 @@ clean:
 	rm -Rf ./target
 
 build:
-	mkdir -p ./target
 	./node_modules/.bin/jshint ./src ./test
-	./node_modules/.bin/browserify -e src/ab.js -o target/ab.js -s Ab
-	./node_modules/.bin/uglifyjs -o target/ab.min.js target/ab.js	
+	./node_modules/.bin/browserify -e src/ab.js -o dist/ab.js -s Ab
+	./node_modules/.bin/uglifyjs -o dist/ab.min.js dist/ab.js
 
 watch:
 	watchr -e "watch('(src|test)/.*\.js') { system 'make' }"
