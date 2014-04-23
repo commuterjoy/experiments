@@ -16,7 +16,7 @@ A JavaScript AB testing framework, ported from [http://www.github.com/guardian/f
 Each AB test is represented by a JavaScript object describing the profile of the test to be undertaken. 
 
 ```
-var profile = { 
+var p = { 
 	id: 'background', // A unique name for the test.
 	audience: 0.1, // A percent of the users you want to run the test on, Eg. 0.1 = 10%.
 	audienceOffset: 0.8, // A segment of the users you want to target the test at. 
@@ -50,16 +50,17 @@ Compile the code and open the example.html file in _./demos_
 With developer tools, we can feed the above profile in to the AB test framework, force our variant to '_pink_', then _run_ the test. 
 
 ```
-var a = new Ab(profile, { variant: 'pink' })
+var a = new Ab(p, { variant: 'pink' })
 a.run();
 ```
 
 You should see the page background turn pink, and running the test on every subsequent visit will turn the page pink until the test has expired.
 
+
 Allocate yourself in to the control group and re-run the test and the background should turn white.
 
 ```
-var a = new Ab(profile, { variant: 'control' })
+var a = new Ab(p, { variant: 'control' })
 a.run();
 ```
 
