@@ -6,10 +6,10 @@ A JavaScript AB testing framework, ported from [http://www.github.com/guardian/f
 
 - 100% client-side.
 - Basic segmentation of audience.
-- Fixed duration tests - that automatically close and delete themselves.
+- Fixed duration tests - that automatically close and delete their footprint.
 - Isolation of each test audience - so a user can not accidently be in several tests at once.
 - Agnostic of where the data is logged - most companies have their own customer data repoisitories.
-
+- Minimal payload - ~1kb (minified + gzip) with no additional cookie overhead created.
  
 ### Experiment profiles 
 
