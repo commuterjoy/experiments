@@ -1,6 +1,6 @@
 {
   "name": "lab-rat",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Matt Chadburn <matt.chadburn@ft.com>",
   "description": "Simple split testing",
   "contributors": [
