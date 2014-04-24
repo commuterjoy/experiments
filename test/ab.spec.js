@@ -52,6 +52,12 @@ describe('AB Testing', function() {
 			var a = new Ab(test);
 			expect(a.getId()).toEqual(851230);
 		});
+        
+        it("segmentation should be optionally deterministic", function() {
+			var a = new Ab(test, { seed: 'abc' }).complete();
+			expect(a.getId()).toEqual(731943);
+		});
+
 		
 		it('should not reassign the user to audience segment if one already exists', function() {
 			localStorage.setItem('ab__uid', '101');	
@@ -110,7 +116,7 @@ describe('AB Testing', function() {
 			a.clean();
 			expect(localStorage.getItem('ab__foo')).toBeNull();
 		});
-
+		
 	});
 
 	describe("Running tests", function () {

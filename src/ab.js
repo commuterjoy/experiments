@@ -1,4 +1,6 @@
-/*global module*/
+/*global module,require */
+
+require('seedrandom');
 
 /**
  * Represents a single Ab test
@@ -9,11 +11,13 @@
 var Ab = function (profile, opts) {
 
 	"use strict";
-	
+
 	this.opts = opts || {};
-	this.profile = profile;
+	this.seed = this.opts.seed;
+    this.profile = profile;
 	this.storagePrefix += profile.id;
-	
+
+
 	// All users need to be allocated to a test percentile
 	this.allocateId();
 
@@ -48,6 +52,21 @@ Ab.prototype.max = 1000000;
  * @type {String}
  */
 Ab.prototype.uidKey = 'ab__uid';
+
+/** 
+ * If set, the allocation of the uidKey is generated with a seeded random
+ * number. This makes the uid deterministic, while making the allocation evenly
+ * distributed from 0 to 1 across all test subjects. A good idea is to seed the
+ * number with a persistant string or integer held externally, for example a
+ * logged in user account. This ensures the user gets allocated in to the same
+ * test bucket and variant across devices, sessions etc. even if the
+ * localStorage data is disgarded.
+ *
+ * Ref: https://github.com/davidbau/seedrandom
+ *
+ * @type {String}
+ */
+Ab.prototype.seed = undefined;
 
 /**
  * The localstorage key prefix for each AB test. 
@@ -197,17 +216,17 @@ Ab.prototype.setId = function (n) {
  */
 Ab.prototype.allocateId = function () {
 	"use strict";
-	
-	// TODO for signed in people we should create a key off their user ids, I.e. deterministic 
-	var generateRandomInteger = function(min, max) {
-		return Math.floor(Math.random() * (max - min + 1) + min); 
+
+	var generateRandomInteger = function(min, max, seed) {
+        var rng = (seed) ? new Math.seedrandom(seed) : Math.random;
+        return Math.floor(rng() * (max - min + 1) + min);
 	};
 
-	switch (this.hasId()) {
+    switch (this.hasId()) {
 		case true:
 			return this.getId();
 		default:
-			return this.setId(generateRandomInteger(this.min, this.max));
+			return this.setId(generateRandomInteger(this.min, this.max, this.seed));
 	}
 };
 
