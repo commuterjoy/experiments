@@ -3,6 +3,9 @@
 
 /**
  * Represents a single Ab test
+ * @type {Function}
+ * @param {Object} profile
+ * @param {Object} opts (optional)
  */
 var Ab = function (profile, opts) {
 
@@ -27,31 +30,73 @@ var Ab = function (profile, opts) {
 	return this;
 };
 
+/**
+ * Represents the minimum end of the range of a user's ID. Ie. Allocation 
+ * of user ID's should be evenly distributed between min and max to ensure
+ * the segmention is fair. 
+ * @type {Number}
+ */
 Ab.prototype.min = 0;
 
+/**
+ * Represents the upper end of the range of a user's ID. 
+ * @type {Number}
+ */
 Ab.prototype.max = 1000000;
 
+/**
+ * The localStorage key of the user id. 
+ * @type {String}
+ */
 Ab.prototype.uidKey = 'ab__uid';
 
+/**
+ * The localstorage key prefix for each AB test. 
+ * @type {String}
+ */
 Ab.prototype.storagePrefix = 'ab__';
 
+/**
+ * The test profile.
+ * @type {Object}
+ */
 Ab.prototype.profile = {};
 
+/**
+ * Each test can be marked as complete (AKA. a conversion), so this property
+ * represents the state of the test for ecah user.
+ * @type {Boolean}
+ */
 Ab.prototype.isComplete = false;
 
+/**
+ * The valid pattern for each AB test's ID. 
+ * @type {RegExp}
+ */
 Ab.prototype.idValidator = /^[a-z0-9-]{1,10}$/; 
 
+/**
+ * Gets the state of the user for this experiment
+ * @return {Object} An object representing that state 
+ */
 Ab.prototype.getParticipation = function () {
 	"use strict";
 	var db = localStorage.getItem(this.storagePrefix);
 	return (db) ? JSON.parse(db) : {};
 };
 
+/**
+ * Remove a user's participation from an experiment
+ * @return {Boolean} 
+ */
 Ab.prototype.removeParticipation = function () {
 	"use strict";
 	return localStorage.removeItem(this.storagePrefix);
 };
 
+/**
+ * Allow a user to join an experiment
+ */
 Ab.prototype.addParticipation = function(test, variantId) {
 	"use strict";
 	localStorage.setItem(this.storagePrefix, JSON.stringify({
@@ -60,17 +105,29 @@ Ab.prototype.addParticipation = function(test, variantId) {
 	}));
 };
 
+/** 
+ * Tests whether the experiment has expired
+ * @return {Boolean} 
+ */
 Ab.prototype.hasExpired = function () {
 	"use strict";
 	return (new Date() > this.profile.expiry);
 };
 
+/** 
+ * Remove a user's participation from an experiment
+ * @return {Object} 
+ */
 Ab.prototype.clean = function () {
 	"use strict";
 	this.removeParticipation();
 	return this;
 };
 
+/**
+ * Puts the user in a test variant
+ * @return {Object}
+ */
 Ab.prototype.segment = function () {
 	"use strict";
     
@@ -107,22 +164,38 @@ Ab.prototype.segment = function () {
 	return this;
 }; 
 
+/** 
+ * Has the user been allocated a permanent AB test ID
+ * @return {Boolean} 
+ */
 Ab.prototype.hasId = function () {
 	"use strict";
 	return !!localStorage.getItem(this.uidKey);
 };
 
+/** 
+ * Get the user's AB test ID
+ * @return {Boolean} 
+ */
 Ab.prototype.getId = function () {
 	"use strict";
 	return parseInt(localStorage.getItem(this.uidKey));
 };
 
+/** 
+ * Set the user's AB test ID
+ * @return {String}
+ */
 Ab.prototype.setId = function (n) {
 	"use strict";
 	localStorage.setItem(this.uidKey, n);
 	return n;
 };
 
+/** 
+ * Allocate the user a permanent test ID
+ * @return {Object} 
+ */
 Ab.prototype.allocateId = function () {
 	"use strict";
 	
@@ -139,6 +212,10 @@ Ab.prototype.allocateId = function () {
 	}
 };
 
+/** 
+ * Run the AB test
+ * @return {Object} 
+ */
 Ab.prototype.run = function () {
 	"use strict";
 	var belongsTo = this.getParticipation().variant;
@@ -150,7 +227,10 @@ Ab.prototype.run = function () {
 	return this;
 };
 
-// a conversion
+/** 
+ * Mark the AB test as complete, IE. a successful conversion
+ * @return {Object} 
+ */
 Ab.prototype.complete = function () {
 	"use strict";
 	this.isComplete = true;
