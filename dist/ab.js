@@ -349,27 +349,27 @@ _dereq_('seedrandom');
  */
 var Ab = function (profile, opts) {
 
-	"use strict";
+    "use strict";
 
-	this.opts = opts || {};
-	this.seed = this.opts.seed;
+    this.opts = opts || {};
+    this.seed = this.opts.seed;
     this.profile = profile;
-	this.storagePrefix += profile.id;
+    this.storagePrefix += profile.id;
 
 
-	// All users need to be allocated to a test percentile
-	this.allocateId();
+    // All users need to be allocated to a test percentile
+    this.allocateId();
 
-	if (!this.idValidator.test(this.profile.id)) {
-		throw new Error('Invalid test profile id');
-	}
-	
-	// if a variant is supplied then force the user in to that test
-	if (!!this.opts.variant) { 
-		this.addParticipation(this.profile.id, this.opts.variant);
-	}
+    if (!this.idValidator.test(this.profile.id)) {
+        throw new Error('Invalid test profile id');
+    }
+    
+    // if a variant is supplied then force the user in to that test
+    if (!!this.opts.variant) { 
+        this.addParticipation(this.profile.id, this.opts.variant);
+    }
 
-	return this;
+    return this;
 };
 
 /**
@@ -437,9 +437,9 @@ Ab.prototype.idValidator = /^[a-z0-9-]{1,10}$/;
  * @return {Object} An object representing that state 
  */
 Ab.prototype.getParticipation = function () {
-	"use strict";
-	var db = localStorage.getItem(this.storagePrefix);
-	return (db) ? JSON.parse(db) : {};
+    "use strict";
+    var db = localStorage.getItem(this.storagePrefix);
+    return (db) ? JSON.parse(db) : {};
 };
 
 /**
@@ -447,19 +447,19 @@ Ab.prototype.getParticipation = function () {
  * @return {Boolean} 
  */
 Ab.prototype.removeParticipation = function () {
-	"use strict";
-	return localStorage.removeItem(this.storagePrefix);
+    "use strict";
+    return localStorage.removeItem(this.storagePrefix);
 };
 
 /**
  * Allow a user to join an experiment
  */
 Ab.prototype.addParticipation = function(test, variantId) {
-	"use strict";
-	localStorage.setItem(this.storagePrefix, JSON.stringify({
-		"id": test,
-		"variant": variantId
-	}));
+    "use strict";
+    localStorage.setItem(this.storagePrefix, JSON.stringify({
+        "id": test,
+        "variant": variantId
+    }));
 };
 
 /** 
@@ -467,8 +467,8 @@ Ab.prototype.addParticipation = function(test, variantId) {
  * @return {Boolean} 
  */
 Ab.prototype.hasExpired = function () {
-	"use strict";
-	return (new Date() > this.profile.expiry);
+    "use strict";
+    return (new Date() > this.profile.expiry);
 };
 
 /** 
@@ -476,9 +476,9 @@ Ab.prototype.hasExpired = function () {
  * @return {Object} 
  */
 Ab.prototype.clean = function () {
-	"use strict";
-	this.removeParticipation();
-	return this;
+    "use strict";
+    this.removeParticipation();
+    return this;
 };
 
 /**
@@ -486,39 +486,39 @@ Ab.prototype.clean = function () {
  * @return {Object}
  */
 Ab.prototype.segment = function () {
-	"use strict";
+    "use strict";
     
-	var smallestTestId = this.max * this.profile.audienceOffset,
-		largestTestId  = smallestTestId + this.max * this.profile.audience;
+    var smallestTestId = this.max * this.profile.audienceOffset,
+        largestTestId  = smallestTestId + this.max * this.profile.audience;
 
-	// deterministically allocate the user in to a test variant
-	var allocateVariant = function (id, profile) {
-		return profile.variants[id % profile.variants.length].id;
-	};
-	
-	// check if not already a member of this experiment
-	if (this.getParticipation().id === this.profile.id) {
-		return this;
-	}
+    // deterministically allocate the user in to a test variant
+    var allocateVariant = function (id, profile) {
+        return profile.variants[id % profile.variants.length].id;
+    };
+    
+    // check if not already a member of this experiment
+    if (this.getParticipation().id === this.profile.id) {
+        return this;
+    }
 
-	// check the test has not passed it's expiry date
-	if (this.hasExpired()) {
-		return this;
-	}
+    // check the test has not passed it's expiry date
+    if (this.hasExpired()) {
+        return this;
+    }
 
-	// check the test can be exectuted in this context
-	if (!this.profile.canRun.call(this)) {
-		return this;
-	}
+    // check the test can be exectuted in this context
+    if (!this.profile.canRun.call(this)) {
+        return this;
+    }
 
-	if (smallestTestId <= this.getId() && largestTestId > this.getId()) {
-		var variant = allocateVariant(this.getId(), this.profile);
-		this.addParticipation(this.profile.id, variant);
-	} else {
-		this.addParticipation(this.profile.id, 'not-in-test');
-	}
-	
-	return this;
+    if (smallestTestId <= this.getId() && largestTestId > this.getId()) {
+        var variant = allocateVariant(this.getId(), this.profile);
+        this.addParticipation(this.profile.id, variant);
+    } else {
+        this.addParticipation(this.profile.id, 'not-in-test');
+    }
+    
+    return this;
 }; 
 
 /** 
@@ -526,8 +526,8 @@ Ab.prototype.segment = function () {
  * @return {Boolean} 
  */
 Ab.prototype.hasId = function () {
-	"use strict";
-	return !!localStorage.getItem(this.uidKey);
+    "use strict";
+    return !!localStorage.getItem(this.uidKey);
 };
 
 /** 
@@ -535,8 +535,8 @@ Ab.prototype.hasId = function () {
  * @return {Boolean} 
  */
 Ab.prototype.getId = function () {
-	"use strict";
-	return parseInt(localStorage.getItem(this.uidKey));
+    "use strict";
+    return parseInt(localStorage.getItem(this.uidKey));
 };
 
 /** 
@@ -544,9 +544,9 @@ Ab.prototype.getId = function () {
  * @return {String}
  */
 Ab.prototype.setId = function (n) {
-	"use strict";
-	localStorage.setItem(this.uidKey, n);
-	return n;
+    "use strict";
+    localStorage.setItem(this.uidKey, n);
+    return n;
 };
 
 /** 
@@ -554,19 +554,19 @@ Ab.prototype.setId = function (n) {
  * @return {Object} 
  */
 Ab.prototype.allocateId = function () {
-	"use strict";
+    "use strict";
 
-	var generateRandomInteger = function(min, max, seed) {
+    var generateRandomInteger = function(min, max, seed) {
         var rng = (seed) ? new Math.seedrandom(seed) : Math.random;
         return Math.floor(rng() * (max - min + 1) + min);
-	};
+    };
 
     switch (this.hasId()) {
-		case true:
-			return this.getId();
-		default:
-			return this.setId(generateRandomInteger(this.min, this.max, this.seed));
-	}
+        case true:
+            return this.getId();
+        default:
+            return this.setId(generateRandomInteger(this.min, this.max, this.seed));
+    }
 };
 
 /** 
@@ -574,14 +574,14 @@ Ab.prototype.allocateId = function () {
  * @return {Object} 
  */
 Ab.prototype.run = function () {
-	"use strict";
-	var belongsTo = this.getParticipation().variant;
-	this.profile.variants.forEach(function (v) {
-		if (v.id === belongsTo) {
-			v.test.call();
-		}
-	});
-	return this;
+    "use strict";
+    var belongsTo = this.getParticipation().variant;
+    this.profile.variants.forEach(function (v) {
+        if (v.id === belongsTo) {
+            v.test.call();
+        }
+    });
+    return this;
 };
 
 /** 
@@ -589,9 +589,9 @@ Ab.prototype.run = function () {
  * @return {Object} 
  */
 Ab.prototype.complete = function () {
-	"use strict";
-	this.isComplete = true;
-	return this;
+    "use strict";
+    this.isComplete = true;
+    return this;
 };
 
 module.exports = Ab;
