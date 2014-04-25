@@ -1,6 +1,6 @@
 {
   "name": "experiments",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Matt Chadburn <matt.chadburn@ft.com>",
   "description": "Simple split testing",
   "contributors": [
