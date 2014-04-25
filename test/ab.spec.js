@@ -102,6 +102,13 @@ describe('AB Testing', function() {
 			new Ab(t, { variant: 'B' }).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}');
 		});
+		
+        it('forcing of users in to a given variant should overwrite an existing variant', function () {
+			localStorage.setItem('ab__foo', '{"id":"foo","variant":"C"}');
+			var t = Object.create(test, { audienceOffset: { value: 0.3 } });
+			new Ab(t, { variant: 'B' }).segment();
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}');
+		});
 
 		it("should not segment user if the test has expired", function() {
 			var dateInThePast = new Date(2000, 1, 1); 
