@@ -7,7 +7,7 @@ changes to web pages that increase or maximize an outcome of interest.
 ## Goals
 
 - 100% client-side
-- Segmentation
+- Audience segmentation:-
     - Basic - audience is segmented in to random buckets. 
     - Deterministic - allows predictable allocation of users in to tests based
       on some external key (Eg, username) 
@@ -22,13 +22,11 @@ changes to web pages that increase or maximize an outcome of interest.
 ## Usage
 
 Let's say we want to test the effectiveness of a button that says 'help' versus
-one that says 'stuck?'.  
+one that says 'stuck?'. Our hypothesis is that, when a user sees an error
+message, 2% more people will click 'help' than 'stuck?'.
 
-Our hypothesis is that, when a user sees an error message, 2% more people will click
-'help' than 'stuck?'.
-
-First we **profile** describes our test. We represent that has a plain
-JavaScript object with a unique test identifier.
+To represent the test in code form we create a **profile** - a plain JavaScript
+object with a unique test identifier.
 
 ```
 var profile = {
@@ -38,10 +36,10 @@ var profile = {
 
 Next we need to create our two **variants** - 'help' and 'stuck'.
 
-In _experiments_ each test is represented by a JavaScript function, so we add
-them to the profile. In this experiment we simply need to update the copy of
-two buttons in the page, but tests can largely do whatever is needed - change
-the layout, load in extra data, truncate bodies of text etc.
+Each variant is represented by a JavaScript function, so we add them to the
+profile. In this experiment we simply need to update the copy of two buttons in
+the page, but tests can largely do whatever is needed - change the layout, load
+in extra data, truncate bodies of text etc.
 
 ```
 var profile = {
@@ -63,10 +61,10 @@ var profile = {
 }
 ```
 
-Now we need an **audience** for the test. Again we defined a property in our
+Now we need an **audience** for the test. Again, we define a property in our
 profile. The profile defines the audience as a % of your total visitors, so if
 we want 10% of people to participate in the test we can state an audience of
-'0.1', or 5% an audience of '0.05'.
+'0.1', or for 5%, an audience value of '0.05'.
 
 ```
 var profile = {
@@ -79,23 +77,15 @@ var profile = {
 ```
 
 Often we want to run several tests simultaneously and be confident that
-variations in one test aren't influencing a second. For this we use the idea of
-a **audience offset**.
+variations in one test aren't influencing a second. To avoid this overlap we
+use the idea of a **audience offset**.
 
-Each user in a test is assigned a persistent number, evenly distributed from 1
-to 1,000,000. We can allocate blocks of these users to individual tests.
+Each user in a test is assigned a persistent integer, evenly distributed from 1
+to 1,000,000, and we allocate blocks of these users to individual tests.
 
-For example, a profile with an audience of 10% and offset of 0.3 will allocate
-all the users with an identifier in the range 300,000 to 400,000 to the test
-and split the variants evenly between this group of people.
-
-In the profile below we would expect, 
-
-- 5% of people to be allocated to the 'help' group  
-- 5% of people to be allocated to the 'stuck' group  
-- 90% of people to not be in the test.
-
-The later group can obviously be selected for other tests.
+For example, a profile with an audience of 10% and an offset of 0.3 will
+allocate all the users with an identifier in the range 300,000 to 400,000 to
+the test and split the variants evenly between this group of people.
 
 ```
 var profile = {
@@ -108,11 +98,18 @@ var profile = {
 }
 ```
 
+In the profile described above we would expect, 
+
+- 5% of people to be allocated to the 'help' group  
+- 5% of people to be allocated to the 'stuck' group  
+- 90% of people to not be in the test.
+
+The later group can obviously be selected for other tests.
+
 A good AB test runs for a fixed period of time. For this reason each test
 profile must have an **expiry** date, represented as JavaScript Date object.
 
 If the date is the past the test framework will refuse to execute the test.
-
 
 ```
 var profile = {
@@ -148,21 +145,22 @@ var help = new Ab(profile).segment().run();
 ### Seeding
 
 Often the goal of an AB test is to track a users behaviour over a period of
-time - often over several sessions and often over several devices. 
+time - typically this will mean collecting data over several sessions across
+several devices. 
 
-Purely client-side test frameworks make this hard as cookies and localStorage
-are somewhat volatile and, more crtically, local to a web browser on a single
-device.
+Purely client-side test frameworks make this hard to do as cookies and
+localStorage are somewhat volatile and, more crtically, local to a web browser
+on a single device.
 
-One approach to solving this problem is using [seeded random number
+One approach to solving this problem is using [psuedorandom number
 generators](https://github.com/davidbau/seedrandom).
 
-These are deterministic algorithms that can, given the same key, generate an
+These are deterministic algorithms that can, given the same input, generate an
 evenly distributed set of numbers, which we can fairly segment on. 
 
 For example, lets say we have user ID of 'UID=314146' stashed in a cookie. We
 can extract that and pass it to the framework to repeatedly bucket the user in
-to the same id and same test variant, Eg. 
+to the same ID and same test variant, Eg. 
 
 ```
 var k = getCookie('UID').split('=')[1];  // k = 314146
