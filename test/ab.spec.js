@@ -53,11 +53,10 @@ describe('AB Testing', function() {
 			expect(a.getId()).toEqual(851230);
 		});
         
-        it("segmentation should be optionally deterministic", function() {
-			var a = new Ab(test, { seed: 'abc' }).complete();
+        it("segmentation should optionally be deterministic", function() {
+			var a = new Ab(test, { seed: 'abc' });
 			expect(a.getId()).toEqual(731943);
 		});
-
 		
 		it('should not reassign the user to audience segment if one already exists', function() {
 			localStorage.setItem('ab__uid', '101');	
@@ -93,8 +92,9 @@ describe('AB Testing', function() {
 		});
 		
 		it("Mark the test as complete", function() {
-			var a = new Ab(test).complete();
+			var a = new Ab(test).segment().complete();
 			expect(a.isComplete).toBeTruthy();
+			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A","complete":true}');
 		});
 		
 		it('should allow the forcing of users in to a given test and variant', function () {

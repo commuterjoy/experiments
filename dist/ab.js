@@ -462,6 +462,16 @@ Ab.prototype.addParticipation = function(test, variantId) {
     }));
 };
 
+/**
+ * Allow a user to join an experiment
+ */
+Ab.prototype.endParticipation = function() {
+    "use strict";
+    var t = this.getParticipation();
+    t.complete = true;
+    localStorage.setItem(this.storagePrefix, JSON.stringify(t));
+};
+
 /** 
  * Tests whether the experiment has expired
  * @return {Boolean} 
@@ -591,6 +601,7 @@ Ab.prototype.run = function () {
 Ab.prototype.complete = function () {
     "use strict";
     this.isComplete = true;
+    this.endParticipation();
     return this;
 };
 
