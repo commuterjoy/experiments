@@ -463,7 +463,7 @@ Ab.prototype.addParticipation = function(test, variantId) {
 };
 
 /**
- * Allow a user to join an experiment
+ * Leave an experiment by marking it complete 
  */
 Ab.prototype.endParticipation = function() {
     "use strict";
