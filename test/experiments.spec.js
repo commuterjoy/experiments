@@ -44,6 +44,7 @@ describe('AB Testing', function() {
 				new Experiments({ id: 'gA___' });
 			}).toThrow();
 		});
+		
 	});
 
 	describe("User segmentation", function () {
@@ -101,6 +102,12 @@ describe('AB Testing', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
 			new Experiments(t, { variant: 'B' }).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"B"}');
+		});
+
+        it('complain if a user specified variant does not exist in the experiment', function() {
+			expect(function () { 
+			    new Experiments(test, { variant: 'X' });
+			}).toThrow();
 		});
 		
         it('forcing of users in to a given variant should overwrite an existing variant', function () {

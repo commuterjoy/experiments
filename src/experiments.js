@@ -7,6 +7,7 @@ require('seedrandom');
  * @type {Function}
  * @param {Object} profile
  * @param {Object} opts (optional)
+ * @class
  */
 var Experiments = function (profile, opts) {
 
@@ -17,7 +18,6 @@ var Experiments = function (profile, opts) {
     this.el = this.opts.body || document.body;
     this.profile = profile;
     this.storagePrefix += profile.id;
-    
 
     // All users need to be allocated to a test percentile
     this.allocateId();
@@ -25,9 +25,9 @@ var Experiments = function (profile, opts) {
     if (!this.idValidator.test(this.profile.id)) {
         throw new Error('Invalid test profile id');
     }
-    
+
     // if a variant is supplied then force the user in to that test
-    if (!!this.opts.variant) { 
+    if (!!this.opts.variant && this.hasVariant(this.opts.variant)) {
         this.addParticipation(this.profile.id, this.opts.variant);
     }
 
@@ -39,7 +39,7 @@ var Experiments = function (profile, opts) {
  * of user ID's should be evenly distributed between min and max to ensure
  * the segmention is fair. 
  * @type {Number}
- */
+**/
 Experiments.prototype.min = 0;
 
 /**
@@ -111,6 +111,22 @@ Experiments.prototype.getParticipation = function () {
 Experiments.prototype.removeParticipation = function () {
     "use strict";
     return localStorage.removeItem(this.storagePrefix);
+};
+
+/**
+ * Tests to see if a variant exists 
+ * @return {Boolean} 
+ */
+Experiments.prototype.hasVariant = function (name) {
+    "use strict";
+    var exists = this.profile.variants.some(function (v) {
+        return v.id === name;
+    });
+    if (exists) {
+        return exists;
+    } else {
+        throw new Error('Invalid variant for this experiment');
+    }
 };
 
 /**
