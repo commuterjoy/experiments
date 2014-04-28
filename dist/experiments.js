@@ -1,4 +1,4 @@
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Ab=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Experiments=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 // seedrandom.js version 2.3.4
 // Author: David Bau
 // Date: 2014 Mar 9
@@ -337,25 +337,26 @@ if (module && module.exports) {
 );
 
 },{}],2:[function(_dereq_,module,exports){
-/*global module,require */
+/*global module,require,document */
 
 _dereq_('seedrandom');
 
 /**
- * Represents a single Ab test
+ * Represents a single Experiments test
  * @type {Function}
  * @param {Object} profile
  * @param {Object} opts (optional)
  */
-var Ab = function (profile, opts) {
+var Experiments = function (profile, opts) {
 
     "use strict";
 
     this.opts = opts || {};
     this.seed = this.opts.seed;
+    this.el = this.opts.body || document.body;
     this.profile = profile;
     this.storagePrefix += profile.id;
-
+    
 
     // All users need to be allocated to a test percentile
     this.allocateId();
@@ -378,19 +379,19 @@ var Ab = function (profile, opts) {
  * the segmention is fair. 
  * @type {Number}
  */
-Ab.prototype.min = 0;
+Experiments.prototype.min = 0;
 
 /**
  * Represents the upper end of the range of a user's ID. 
  * @type {Number}
  */
-Ab.prototype.max = 1000000;
+Experiments.prototype.max = 1000000;
 
 /**
  * The localStorage key of the user id. 
  * @type {String}
  */
-Ab.prototype.uidKey = 'ab__uid';
+Experiments.prototype.uidKey = 'ab__uid';
 
 /** 
  * If set, the allocation of the uidKey is generated with a seeded random
@@ -405,38 +406,38 @@ Ab.prototype.uidKey = 'ab__uid';
  *
  * @type {String}
  */
-Ab.prototype.seed = undefined;
+Experiments.prototype.seed = undefined;
 
 /**
  * The localstorage key prefix for each AB test. 
  * @type {String}
  */
-Ab.prototype.storagePrefix = 'ab__';
+Experiments.prototype.storagePrefix = 'ab__';
 
 /**
  * The test profile.
  * @type {Object}
  */
-Ab.prototype.profile = {};
+Experiments.prototype.profile = {};
 
 /**
  * Each test can be marked as complete (AKA. a conversion), so this property
  * represents the state of the test for ecah user.
  * @type {Boolean}
  */
-Ab.prototype.isComplete = false;
+Experiments.prototype.isComplete = false;
 
 /**
  * The valid pattern for each AB test's ID. 
  * @type {RegExp}
  */
-Ab.prototype.idValidator = /^[a-z0-9-]{1,10}$/; 
+Experiments.prototype.idValidator = /^[a-z0-9-]{1,10}$/; 
 
 /**
  * Gets the state of the user for this experiment
  * @return {Object} An object representing that state 
  */
-Ab.prototype.getParticipation = function () {
+Experiments.prototype.getParticipation = function () {
     "use strict";
     var db = localStorage.getItem(this.storagePrefix);
     return (db) ? JSON.parse(db) : {};
@@ -446,7 +447,7 @@ Ab.prototype.getParticipation = function () {
  * Remove a user's participation from an experiment
  * @return {Boolean} 
  */
-Ab.prototype.removeParticipation = function () {
+Experiments.prototype.removeParticipation = function () {
     "use strict";
     return localStorage.removeItem(this.storagePrefix);
 };
@@ -454,7 +455,7 @@ Ab.prototype.removeParticipation = function () {
 /**
  * Allow a user to join an experiment
  */
-Ab.prototype.addParticipation = function(test, variantId) {
+Experiments.prototype.addParticipation = function(test, variantId) {
     "use strict";
     localStorage.setItem(this.storagePrefix, JSON.stringify({
         "id": test,
@@ -465,7 +466,7 @@ Ab.prototype.addParticipation = function(test, variantId) {
 /**
  * Leave an experiment by marking it complete 
  */
-Ab.prototype.endParticipation = function() {
+Experiments.prototype.endParticipation = function() {
     "use strict";
     var t = this.getParticipation();
     t.complete = true;
@@ -476,7 +477,7 @@ Ab.prototype.endParticipation = function() {
  * Tests whether the experiment has expired
  * @return {Boolean} 
  */
-Ab.prototype.hasExpired = function () {
+Experiments.prototype.hasExpired = function () {
     "use strict";
     return (new Date() > this.profile.expiry);
 };
@@ -485,7 +486,7 @@ Ab.prototype.hasExpired = function () {
  * Remove a user's participation from an experiment
  * @return {Object} 
  */
-Ab.prototype.clean = function () {
+Experiments.prototype.clean = function () {
     "use strict";
     this.removeParticipation();
     return this;
@@ -495,7 +496,7 @@ Ab.prototype.clean = function () {
  * Puts the user in a test variant
  * @return {Object}
  */
-Ab.prototype.segment = function () {
+Experiments.prototype.segment = function () {
     "use strict";
     
     var smallestTestId = this.max * this.profile.audienceOffset,
@@ -535,7 +536,7 @@ Ab.prototype.segment = function () {
  * Has the user been allocated a permanent AB test ID
  * @return {Boolean} 
  */
-Ab.prototype.hasId = function () {
+Experiments.prototype.hasId = function () {
     "use strict";
     return !!localStorage.getItem(this.uidKey);
 };
@@ -544,7 +545,7 @@ Ab.prototype.hasId = function () {
  * Get the user's AB test ID
  * @return {Boolean} 
  */
-Ab.prototype.getId = function () {
+Experiments.prototype.getId = function () {
     "use strict";
     return parseInt(localStorage.getItem(this.uidKey));
 };
@@ -553,7 +554,7 @@ Ab.prototype.getId = function () {
  * Set the user's AB test ID
  * @return {String}
  */
-Ab.prototype.setId = function (n) {
+Experiments.prototype.setId = function (n) {
     "use strict";
     localStorage.setItem(this.uidKey, n);
     return n;
@@ -563,7 +564,7 @@ Ab.prototype.setId = function (n) {
  * Allocate the user a permanent test ID
  * @return {Object} 
  */
-Ab.prototype.allocateId = function () {
+Experiments.prototype.allocateId = function () {
     "use strict";
 
     var generateRandomInteger = function(min, max, seed) {
@@ -583,7 +584,7 @@ Ab.prototype.allocateId = function () {
  * Run the AB test
  * @return {Object} 
  */
-Ab.prototype.run = function () {
+Experiments.prototype.run = function () {
     "use strict";
     var belongsTo = this.getParticipation().variant;
     this.profile.variants.forEach(function (v) {
@@ -598,14 +599,25 @@ Ab.prototype.run = function () {
  * Mark the AB test as complete, IE. a successful conversion
  * @return {Object} 
  */
-Ab.prototype.complete = function () {
+Experiments.prototype.complete = function () {
     "use strict";
     this.isComplete = true;
     this.endParticipation();
     return this;
 };
 
-module.exports = Ab;
+/** 
+ * Boilerplate event broadcaster
+ */
+Experiments.prototype.emit = function (eventType, data) {
+    "use strict";
+    this.el.dispatchEvent(new CustomEvent('experiments.' + eventType, {
+        detail: data,
+        bubbles: true
+    }));
+};
+
+module.exports = Experiments;
 
 },{"seedrandom":1}]},{},[2])
 (2)

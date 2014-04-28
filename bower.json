@@ -1,7 +1,7 @@
 {
   "name": "experiments",
   "version": "0.2.2",
-  "main": "dist/ab.min.js",
+  "main": "dist/experiments.min.js",
   "dependencies": {
     "seedrandom": "2.3.4"
   }

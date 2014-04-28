@@ -139,7 +139,7 @@ var profile = {
 With our profile we can now instantiate a test, segment the audience and run it.
 
 ```
-var help = new Ab(profile).segment().run();
+var help = new Experiments(profile).segment().run();
 ```
 
 ### Seeding
@@ -164,7 +164,7 @@ to the same ID and same test variant, Eg.
 
 ```
 var k = getCookie('UID').split('=')[1];  // k = 314146
-new Ab(profile, { seed: key }).segment().run();
+new Experiments(profile, { seed: key }).segment().run();
 ```
 
 This is very useful when testing people across different devices over long
@@ -181,7 +181,7 @@ With developer tools, we can feed the above profile in to the AB test
 framework, force our variant to '_pink_', then _run_ the test. 
 
 ```
-var a = new Ab(p, { variant: 'pink' }).run()
+var a = new Experiments(p, { variant: 'pink' }).run()
 ```
 
 You should see the page background turn pink, and running the test on every
@@ -192,7 +192,7 @@ Allocate yourself in to the control group and re-run the test and the
 background should turn white.
 
 ```
-var a = new Ab(p, { variant: 'control' }).run();
+var a = new Experiments(p, { variant: 'control' }).run();
 ```
 
 For the duration of the test we can track the data of that user (say, pages per
@@ -217,11 +217,11 @@ localStorage.getItem('ab__background');
 ```
 
 In the real world we want the test subjects allocated randomly in to a variants
-(or excluded from the test), so we don't specify the variant in the _Ab_
+(or excluded from the test), so we don't specify the variant in the _Experiments_
 constructor and invoke `segment()` instead, before running the experiment,
 
 ```
-var a = new Ab(profile).segment().run();
+var a = new Experiments(profile).segment().run();
 ```
 
 The `segment()` function decides if a user should be in the test, and, if they

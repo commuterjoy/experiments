@@ -1,6 +1,6 @@
 karma:
 	mkdir -p ./target
-	./node_modules/.bin/browserify test/ab.spec.js -o target/ab.spec.js
+	./node_modules/.bin/browserify test/experiments.spec.js -o target/experiments.spec.js -s Experiments
 	./node_modules/karma/bin/karma start karma.conf.js --log-level debug --debug
 
 clean:
@@ -10,8 +10,8 @@ build:
 	ruby -e "require 'json';JSON.parse(STDIN.read)" < bower.json
 	ruby -e "require 'json';JSON.parse(STDIN.read)" < package.json
 	./node_modules/.bin/jshint ./src ./test
-	./node_modules/.bin/browserify -e src/ab.js -o dist/ab.js -s Ab
-	./node_modules/.bin/uglifyjs -o dist/ab.min.js dist/ab.js
+	./node_modules/.bin/browserify -e src/experiments.js -o dist/experiments.js -s Experiments
+	./node_modules/.bin/uglifyjs -o dist/experiments.min.js dist/experiments.js
 
 watch:
 	watchr -e "watch('(src|test)/.*\.js') { system 'make' }"

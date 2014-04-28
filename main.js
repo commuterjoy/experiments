@@ -1,3 +1,3 @@
-var Ab = require('./src/ab')
+var Experiments = require('./src/experiments')
 
-module.exports = Ab;
+module.exports = Experiments;
