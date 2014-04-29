@@ -1,6 +1,6 @@
 {
   "name": "experiments",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "author": "Matt Chadburn <matt.chadburn@ft.com>",
   "description": "Simple split testing",
   "contributors": [
@@ -18,6 +18,9 @@
     "ab testing",
     "split testing"
   ],
+  "dependencies": {
+    "seedrandom": "2.3.4"
+  },
   "devDependencies": {
     "browserify": "*",
     "karma": "0.12.9",
