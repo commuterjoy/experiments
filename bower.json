@@ -1,6 +1,6 @@
 {
   "name": "experiments",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "main": "dist/experiments.min.js",
   "dependencies": {
     "seedrandom": "2.3.4"
