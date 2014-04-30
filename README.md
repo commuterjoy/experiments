@@ -160,13 +160,15 @@ to listen out for and hook their tracking code to.
 
 The events are fired on `document.body` and contain the following `event.detail`.
 
-#### experiemnts.{profile.id}.start
+#### experiments.{profile.id}.start
 
 - variant - the segment the user has been assigned to.
 
-#### experiemnts.{profile.id}.complete
+#### experiments.{profile.id}.complete
 
 _None_.
+
+Where "{profile.id}" is the name of the experiment.
 
 ### Seeding
 
