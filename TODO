@@ -1,0 +1,31 @@
+
+v0.3.0
+
+DONE - Ab.complete() to track conversions & remember 'complete' in localStorage.
+DONE - Get rid of references to 'ab' - in file names etc.
+DONE - Emit events so external code can attach tracking to start and complete events.
+DONE - Big README rewrite.
+DONE - Apache 2 License
+
+v0.2.0
+
+DONE - Larger participant ID range (of one million).
+DONE - Chainable interface.
+DONE - JS Docs.
+DONE - Make the segmentation deterministic.
+
+v0.1.0
+
+DONE - allocate a participant ID, segment & run.
+
++---------
+
+LATER 
+
+- Ship with a CustomEvent polyfill.
+- Split public/private functions.
+- Fix quota levels etc. in writing to localStorage. Mark these as 'not-in-test'.
+- Move to FT repo?
+- Nicer interface for managing multiple tests.
+- Sync some tests with a cookie (for server-side variations).
+
