@@ -2,17 +2,34 @@
 
 var Experiments = require('./../main'); 
 
+// polyfill for PhantomJS
+function CustomEvent ( event, params ) {
+    "use strict";
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+}
+
+CustomEvent.prototype = window.Event.prototype;
+window.CustomEvent = CustomEvent;
+
 describe('AB Testing', function() {
 
 	"use strict";
 
-	// mock test
+    var listener = {
+        'start': function () {},
+        'complete': function () {}
+    };
+	
+    // mock test
 	var test = {
 		id: 'foo',
 		audience: 0.1, // 10% of people  
 		audienceOffset: 0.8, // ... in the 0.8 - 0.9 range
 		expiry: new Date(2050, 1, 1),
-		variants: [{
+        variants: [{
 			id: 'A',
 			test: function () {
 				return true;
@@ -27,10 +44,12 @@ describe('AB Testing', function() {
 			return true;
 		}
 	};
-
+        
 	beforeEach(function() {
-		spyOn(Math, 'random').and.returnValue(0.85123);
+        spyOn(Math, 'random').and.returnValue(0.85123);
 		localStorage.clear();
+        document.body.removeEventListener('experiments.foo.started', listener.start);
+        document.body.removeEventListener('experiments.foo.started', listener.complete);
 	});
 
 	describe("Experiments", function () {
@@ -69,11 +88,29 @@ describe('AB Testing', function() {
 			new Experiments(test).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}');
 		});
+	
+        it('should fire an event when new user joins the experiment for the first time', function() {
+            spyOn(listener, 'start');
+            document.body.addEventListener('experiments.foo.started', listener.start, true);
+            new Experiments(test).segment();
+            new Experiments(test).segment(); // call twice to ensure start event is only triggered once
+            expect(listener.start.calls.count()).toEqual(1);
+            expect(listener.start.calls.mostRecent().args[0].detail.variant).toEqual("A");
+
+		});
 
 		it('should put all non-participating users in a "not in test" group', function() {
 			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
 			new Experiments(t).segment();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"not-in-test"}');
+		});
+		
+        it('should not fire a start event when a user is put in to the "not in test" group', function() {
+            spyOn(listener, 'start');
+            document.body.addEventListener('experiments.foo.started', listener.start, true);
+			var t = Object.create(test, { audienceOffset: { value: 0.3 } }); 
+			new Experiments(t).segment();
+            expect(listener.start.calls.count()).toEqual(0);
 		});
 	
 		it("should not segment user if they already belong to the test", function() {
@@ -93,9 +130,12 @@ describe('AB Testing', function() {
 		});
 		
 		it("Mark the test as complete", function() {
-			var a = new Experiments(test).segment().complete();
+            spyOn(listener, 'complete');
+            document.body.addEventListener('experiments.foo.complete', listener.complete, true);
+            var a = new Experiments(test).segment().complete();
 			expect(a.isComplete).toBeTruthy();
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A","complete":true}');
+            expect(listener.complete.calls.count()).toEqual(1);
 		});
 		
 		it('should allow the forcing of users in to a given test and variant', function () {

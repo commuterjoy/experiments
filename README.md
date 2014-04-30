@@ -142,6 +142,24 @@ With our profile we can now instantiate a test, segment the audience and run it.
 var help = new Experiments(profile).segment().run();
 ```
 
+### Events 
+
+Each experiment will at least need to track the number of participants and
+number of successful conversions.
+
+The framework itself does not do this, but provides events for each experiment
+to listen out for and hook their tracking code to.
+
+The events are fired on `document.body` and contain the following `event.detail`.
+
+#### experiemnts.{profile.id}.start
+
+- variant - the segment the user has been assigned to.
+
+#### experiemnts.{profile.id}.complete
+
+_None_.
+
 ### Seeding
 
 Often the goal of an AB test is to track a users behaviour over a period of

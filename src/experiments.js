@@ -15,7 +15,7 @@ var Experiments = function (profile, opts) {
 
     this.opts = opts || {};
     this.seed = this.opts.seed;
-    this.el = this.opts.body || document.body;
+    this.el = this.opts.el || document.body;
     this.profile = profile;
     this.storagePrefix += profile.id;
 
@@ -202,6 +202,7 @@ Experiments.prototype.segment = function () {
     if (smallestTestId <= this.getId() && largestTestId > this.getId()) {
         var variant = allocateVariant(this.getId(), this.profile);
         this.addParticipation(this.profile.id, variant);
+        this.emit(this.profile.id + '.started', { variant: variant });
     } else {
         this.addParticipation(this.profile.id, 'not-in-test');
     }
@@ -280,6 +281,7 @@ Experiments.prototype.complete = function () {
     "use strict";
     this.isComplete = true;
     this.endParticipation();
+    this.emit(this.profile.id + '.complete', {});
     return this;
 };
 
