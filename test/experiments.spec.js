@@ -89,7 +89,6 @@ describe('AB Testing', function() {
 			expect(localStorage.getItem('ab__foo')).toEqual('{"id":"foo","variant":"A"}');
 		});
 	
-        // TODO - using callbacks for now, later we need to use custom events
         it('should fire an event when new user joins the experiment for the first time', function() {
             spyOn(listener, 'start');
             document.body.addEventListener('experiments.foo.started', listener.start, true);
