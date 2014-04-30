@@ -19,6 +19,14 @@ changes to web pages that increase or maximize an outcome of interest.
 - Minimal payload - ~2kb (minified + gzip) with no additional cookie overhead
   created. 
 
+## Browser Support
+
+Experiments works in Chrome 15, Firefox 11, IE 9, and Safari 535.2.
+
+Experiments makes use of
+[CustomEvent](https://developer.mozilla.org/en/docs/Web/API/CustomEvent), which
+will need polyfilling in IE.
+
 ## Usage
 
 Let's say we want to test the effectiveness of a button that says 'help' versus
