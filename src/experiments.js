@@ -267,10 +267,20 @@ Experiments.prototype.run = function () {
     var belongsTo = this.getParticipation().variant;
     this.profile.variants.forEach(function (v) {
         if (v.id === belongsTo) {
+            this.setCssFlag(this.opts.id, v.id); 
             v.test.call();
         }
     });
     return this;
+};
+
+/** 
+ * Run the AB test
+ * @return {Object} 
+ */
+Experiments.prototype.setCssFlag = function (test, variant) {
+    "use strict";
+    document.documentElement.className += ' ' + test ':' + variant
 };
 
 /** 
