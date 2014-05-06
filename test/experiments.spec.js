@@ -50,6 +50,7 @@ describe('AB Testing', function() {
 		localStorage.clear();
         document.body.removeEventListener('experiments.foo.started', listener.start);
         document.body.removeEventListener('experiments.foo.started', listener.complete);
+        document.documentElement.className = '';
 	});
 
 	describe("Experiments", function () {
@@ -180,6 +181,11 @@ describe('AB Testing', function() {
 			spyOn(variant, 'test');
 			new Experiments(test).segment().run();
 			expect(variant.test.calls.count()).toBe(1);
+		});
+		
+        it('should affix a css flag with the ', function() {
+			new Experiments(test).segment().run();
+			expect(document.documentElement.className).toContain(' foo:A');
 		});
 
 	});

@@ -603,13 +603,24 @@ Experiments.prototype.allocateId = function () {
  */
 Experiments.prototype.run = function () {
     "use strict";
-    var belongsTo = this.getParticipation().variant;
+    var belongsTo = this.getParticipation().variant,
+        self = this;
     this.profile.variants.forEach(function (v) {
         if (v.id === belongsTo) {
+            self.setCssFlag(self.profile.id, v.id); 
             v.test.call();
         }
     });
     return this;
+};
+
+/** 
+ * Set a CSS Flag on the <html> element of the document
+ * @return {Object} 
+ */
+Experiments.prototype.setCssFlag = function (test, variant) {
+    "use strict";
+    document.documentElement.className += ' ' + test + ':' + variant;
 };
 
 /** 
