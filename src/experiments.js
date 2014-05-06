@@ -264,10 +264,11 @@ Experiments.prototype.allocateId = function () {
  */
 Experiments.prototype.run = function () {
     "use strict";
-    var belongsTo = this.getParticipation().variant;
+    var belongsTo = this.getParticipation().variant,
+        self = this;
     this.profile.variants.forEach(function (v) {
         if (v.id === belongsTo) {
-            this.setCssFlag(this.opts.id, v.id); 
+            self.setCssFlag(self.profile.id, v.id); 
             v.test.call();
         }
     });
@@ -275,12 +276,12 @@ Experiments.prototype.run = function () {
 };
 
 /** 
- * Run the AB test
+ * Set a CSS Flag on the <html> element of the document
  * @return {Object} 
  */
 Experiments.prototype.setCssFlag = function (test, variant) {
     "use strict";
-    document.documentElement.className += ' ' + test ':' + variant
+    document.documentElement.className += ' ' + test + ':' + variant;
 };
 
 /** 
